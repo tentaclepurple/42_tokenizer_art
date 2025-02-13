@@ -13,7 +13,6 @@ compile:
 deploy:
 	npx hardhat run deployment/deploy.js --network amoy
 
-
 mint:
 	npx hardhat run mint/mint.js --network amoy
 
