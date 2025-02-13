@@ -1,15 +1,14 @@
 import requests
 import json
 import os
-from pathlib import Path
 
 
 PINATA_API_KEY = os.getenv('PINATA_API_KEY')
 PINATA_SECRET = os.getenv('PINATA_SECRET')
 
-
 def upload_to_pinata(image_path, metadata):
-    # 1. Subir imagen
+
+
     files = {'file': open(image_path, 'rb')}
     headers = {
         'pinata_api_key': PINATA_API_KEY,
@@ -22,7 +21,6 @@ def upload_to_pinata(image_path, metadata):
     )
     image_hash = image_response.json()['IpfsHash']
     
-    # 2. Subir metadata con referencia a la imagen
     metadata['image'] = f"ipfs://{image_hash}"
     json_response = requests.post(
         "https://api.pinata.cloud/pinning/pinJSONToIPFS",
@@ -51,7 +49,6 @@ def get_pinata_content(ipfs_hash):
 
 
 def main():
-   # Test de subida
    test_image = "assets/image1.webp"
    test_metadata = {
        "title": "42rocket",

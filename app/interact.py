@@ -15,8 +15,6 @@ def run_js_script(script_name, token_uri=None):
 
 def main():
     token_uri = 'ipfs://bafybeiecl7myvuveviqzi3lrpy2r3i5ijkdhkunimyc6gyzrrcck7c375m'
-    #run_js_script('mint/mint.js', token_uri)
-
 
     run_js_script('deployment/getTokenURIs.js')
 
