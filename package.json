@@ -1,0 +1,23 @@
+{
+    "name": "nft42",
+    "version": "1.0.0",
+    "description": "NFT project for 42",
+    "main": "hardhat.config.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+      "dotenv": "^16.4.5",
+      "hardhat": "^2.22.10"
+    },
+    "dependencies": {
+      "@nomiclabs/hardhat-ethers": "^2.2.3",
+      "@nomiclabs/hardhat-waffle": "^2.0.6",
+      "@openzeppelin/contracts": "^4.9.3",
+      "chai": "^5.1.1",
+      "ethers": "^5.7.2",
+      "waffle": "^0.0.4"
+    }
+  }

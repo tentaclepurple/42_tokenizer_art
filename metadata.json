@@ -1,0 +1,11 @@
+{
+    "name": "NFT42",
+    "description": "NFT for 42 project",
+    "image": "ipfs://bafybeiecl7myvuveviqzi3lrpy2r3i5ijkdhkunimyc6gyzrrcck7c375m/",
+    "attributes": [
+        {
+            "trait_type": "Artist",
+            "value": "YOUR_42_LOGIN"
+        }
+    ]
+}
