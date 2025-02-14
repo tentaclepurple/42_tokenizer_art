@@ -7,7 +7,12 @@ import tempfile
 import requests
 
 
-
+def validate_input(title, artist):
+    if len(title) < 3 or len(title) > 50:
+        return False, "Title must be between 3 and 50 characters"
+    if len(artist) < 3 or len(artist) > 30:
+        return False, "Artist name must be between 3 and 30 characters"
+    return True, ""
 
 
 def get_nft_collection():
@@ -93,20 +98,26 @@ def mint_nft(path, title, artist):
 def main():
 
     st.set_page_config(
-    page_title="42 Students Leaderboard",
+    page_title="Tokenizer Art 52",
     page_icon="🚀",
     layout="centered"
     )
 
-    st.title("NFT Minting App")
+    st.title("TOKENIZER ART 42")
+    st.write("Powered by Polygon")
 
     tab1, tab2 = st.tabs(["Mint", "Collection"])
     
     with tab1:
         st.header("Create your NFT")
+
+        st.write("")
         
         title = st.text_input("Title")
         artist = st.text_input("Artist")
+        
+        st.write("")
+        st.write("")
         
         col1, col2 = st.columns(2)
         
@@ -133,38 +144,54 @@ def main():
         with col2:
             st.subheader("Generate Image")
             prompt = st.text_input("Enter your prompt for image generation")
+            col2_buttons = st.columns([1, 1])
             
-            if st.button("Generate"):
-                if not prompt:
-                    st.error("Please enter a prompt")
-                    return None
-
-                from generative import generate_image
-                with st.spinner('Generating image...'):
-                    st.session_state.gen_img_path = generate_image(prompt)
-                    if st.session_state.gen_img_path:
-                        st.image(st.session_state.gen_img_path)
+            with col2_buttons[0]:
+                if 'generating' not in st.session_state:
+                    st.session_state.generating = False
+                    
+                if st.button("Generate", disabled=st.session_state.generating):
+                    if not prompt:
+                        st.error("Please enter a prompt")
                     else:
-                        st.error("Sorry. Free quota exceeded. Please upload an image.")
+                        st.session_state.generating = True
+                        from generative import generate_image
+                        with st.spinner('Generating image...'):
+                            st.session_state.gen_img_path = generate_image(prompt)
+                            if st.session_state.gen_img_path:
+                                st.image(st.session_state.gen_img_path)
+                            else:
+                                st.error("Sorry. Free quota exceeded. Please upload an image.")
+                        st.session_state.generating = False
+                    
+            with col2_buttons[1]:
+                if st.button("Clear"):
+                    st.session_state.gen_img_path = None
+                    st.rerun()
+        
+        st.write("")
+        st.write("")
+        st.write("")
 
+        if 'minting' not in st.session_state:
+            st.session_state.minting = False
 
-        if st.button("Mint NFT"):
-            print("Bool uploaded", bool(tmp_path))
-            print("Bool generated", bool(st.session_state.gen_img_path))
-            if not title or not artist:
-                st.error("Please fill in title and artist")
+        if st.button("Mint NFT", disabled=st.session_state.minting, use_container_width=True):
+            valid, msg = validate_input(title, artist)
+            if not valid:
+                st.error(msg)
             elif not (bool(tmp_path) != bool(st.session_state.gen_img_path)):
                 st.error("Please upload or generate an image")
             else:
+                st.session_state.minting = True
                 with st.spinner('Minting NFT...'):
                     path = tmp_path if tmp_path else st.session_state.gen_img_path
-
                     success, msg = mint_nft(path, title, artist)
                     if success:
                         st.success(msg)
                     else:
                         st.error(msg)
-    
+                st.session_state.minting = False
     with tab2:
         st.header("Minted NFTs Showcase")
         
