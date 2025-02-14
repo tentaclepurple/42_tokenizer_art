@@ -107,6 +107,12 @@ def main():
     st.write("Powered by Polygon")
 
     tab1, tab2 = st.tabs(["Mint", "Collection"])
+
+    if 'gen_img_path' not in st.session_state:
+        st.session_state.gen_img_path = None
+
+    if 'minting' not in st.session_state:
+        st.session_state.minting = False
     
     with tab1:
         st.header("Create your NFT")
@@ -194,6 +200,13 @@ def main():
                 st.session_state.minting = False
     with tab2:
         st.header("Minted NFTs Showcase")
+
+        CONTRACT_ADDRESS = os.getenv('CONTRACT_ADDRESS')
+        explorer_url = f"https://amoy.polygonscan.com/address/{CONTRACT_ADDRESS}"
+
+        st.markdown(f"[View Contract]({explorer_url}) 🔍")
+        st.write("Powered by Polygon Amoy Block Explorer")
+        st.write("")
         
         if st.button("Get Collection"):
             with st.spinner('Calling blockchain...'):
