@@ -9,9 +9,6 @@ services:
       - .env
     volumes:
       - .:/app
-<<<<<<< HEAD
-=======
     ports:
       - "8501:8501"
->>>>>>> collection
     tty: true
