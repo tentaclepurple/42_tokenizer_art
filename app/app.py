@@ -5,6 +5,14 @@ from pinata import upload_to_pinata, get_pinata_content
 from interact import run_js_script
 import tempfile
 import requests
+import dotenv
+
+
+from dotenv import load_dotenv
+
+load_dotenv()  
+
+CONTRACT_ADDRESS = os.getenv('CONTRACT_ADDRESS')
 
 
 def validate_input(title, artist):
@@ -20,7 +28,6 @@ def get_nft_collection():
     
     import json
     try:
-        print(result)
 
         uris = result.replace("Token URIs: ", "")
         uris_string = result.replace("Token URIs: ", "").replace("'", '"')
@@ -35,7 +42,6 @@ def get_nft_collection():
                     print(f"Invalid metadata")
                     continue
                 
-                # Verificar que la imagen es válida
                 response = requests.head(image_url)
                 if not response.headers.get('content-type', '').startswith('image/'):
                     print(f"Invalid URL")
@@ -71,12 +77,6 @@ def check_image(image_file):
 
 
 def mint_nft(path, title, artist):
-
-    """ with tempfile.NamedTemporaryFile(delete=False, suffix='.webp') as tmp_file:
-        tmp_file.write(image_file.getvalue())
-        tmp_path = tmp_file.name
-        print("Temp file:", tmp_path)
-        print("printed") """
 
     try:
         metadata = {
@@ -141,7 +141,6 @@ def main():
                     with tempfile.NamedTemporaryFile(delete=False, suffix='.webp') as tmp_file:
                         tmp_file.write(uploaded_file.getvalue())
                         tmp_path = tmp_file.name
-                        print("Temp file:", tmp_path)
                         
                 else:
                     st.error(msg)
@@ -201,7 +200,6 @@ def main():
     with tab2:
         st.header("Minted NFTs Showcase")
 
-        CONTRACT_ADDRESS = os.getenv('CONTRACT_ADDRESS')
         explorer_url = f"https://amoy.polygonscan.com/address/{CONTRACT_ADDRESS}"
 
         st.markdown(f"[View Contract]({explorer_url}) 🔍")

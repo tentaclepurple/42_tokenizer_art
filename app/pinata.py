@@ -11,7 +11,7 @@ PINATA_SECRET = os.getenv('PINATA_SECRET')
 
 def upload_to_pinata(image_path, metadata):
 
-
+    print("pinata key", PINATA_API_KEY)
     files = {'file': open(image_path, 'rb')}
     headers = {
         'pinata_api_key': PINATA_API_KEY,
@@ -36,20 +36,6 @@ def upload_to_pinata(image_path, metadata):
     #print(f"Metadata: ipfs://{metadata_hash}")
     return metadata_hash
 
-
-""" def get_pinata_content(ipfs_hash):
-    clean_hash = ipfs_hash.replace('ipfs://', '')
-    metadata_url = f"https://gateway.pinata.cloud/ipfs/{clean_hash}"
-    print("METADATA URL", metadata_url)
-
-    response = requests.get(metadata_url)
-    if response.status_code != 200:
-        raise Exception(f"Error: {response.status_code}")
-    metadata = response.json()
-    image = metadata.get('image')
-    image_url = f"https://gateway.pinata.cloud/ipfs/{image.replace('ipfs://', '')}"
-
-    return metadata, image_url """
 
 def get_pinata_content(ipfs_hash):
     clean_hash = ipfs_hash.replace('ipfs://', '')

@@ -6,6 +6,7 @@ async function main() {
     
     const NFT42 = await ethers.getContractFactory("NFT42");
     const nft = await NFT42.attach(process.env.CONTRACT_ADDRESS);
+    console.log(process.env.CONTRACT_ADDRESS)
 
     // Obtener la URI de la variable de entorno
     const tokenURI = process.env.TOKEN_URI;

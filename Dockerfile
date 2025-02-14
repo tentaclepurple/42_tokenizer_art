@@ -27,8 +27,10 @@ RUN npm install @openzeppelin/contracts@4.9.3
 
 RUN python3 -m venv venv
 RUN echo 'alias py="python3"' >> /root/.bashrc
+RUN echo 'python3 -m venv venv' >> /root/.bashrc
 RUN echo 'source venv/bin/activate' >> /root/.bashrc
 RUN echo 'pip install -r requirements.txt' >> /root/.bashrc
+RUN echo 'npm install' >> /root/.bashrc
 
 
 COPY . .
