@@ -37,9 +37,10 @@ def upload_to_pinata(image_path, metadata):
     return metadata_hash
 
 
-def get_pinata_content(ipfs_hash):
+""" def get_pinata_content(ipfs_hash):
     clean_hash = ipfs_hash.replace('ipfs://', '')
     metadata_url = f"https://gateway.pinata.cloud/ipfs/{clean_hash}"
+    print("METADATA URL", metadata_url)
 
     response = requests.get(metadata_url)
     if response.status_code != 200:
@@ -47,6 +48,24 @@ def get_pinata_content(ipfs_hash):
     metadata = response.json()
     image = metadata.get('image')
     image_url = f"https://gateway.pinata.cloud/ipfs/{image.replace('ipfs://', '')}"
+
+    return metadata, image_url """
+
+def get_pinata_content(ipfs_hash):
+    clean_hash = ipfs_hash.replace('ipfs://', '')
+    
+    gateway_url = "https://silver-big-wren-685.mypinata.cloud/ipfs"
+    
+    metadata_url = f"{gateway_url}/{clean_hash}"
+    response = requests.get(metadata_url)
+    
+    if response.status_code != 200:
+        raise Exception(f"Error: {response.status_code}")
+    
+    metadata = response.json()
+    image_hash = metadata.get('image').replace('ipfs://', '')
+    
+    image_url = f"{gateway_url}/{image_hash}"
 
     return metadata, image_url
 

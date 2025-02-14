@@ -65,20 +65,21 @@ def check_image(image_file):
         return False, "Archivo no es una imagen válida"
 
 
-def mint_nft(path, title, artist):
+def mint_nft(image_file, title, artist):
+    print("Received image in mintnft:", image_file)
 
-    """ with tempfile.NamedTemporaryFile(delete=False, suffix='.webp') as tmp_file:
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.webp') as tmp_file:
         tmp_file.write(image_file.getvalue())
         tmp_path = tmp_file.name
         print("Temp file:", tmp_path)
-        print("printed") """
+        print("printed")
 
     try:
         metadata = {
             "title": title,
             "artist": artist
         }
-        metadata_hash = upload_to_pinata(path, metadata)
+        metadata_hash = upload_to_pinata(tmp_path, metadata)
         
         ipfs_uri = f"ipfs://{metadata_hash}"
         run_js_script('mint/mint.js', ipfs_uri)
@@ -87,7 +88,7 @@ def mint_nft(path, title, artist):
     except Exception as e:
         return False, f"Error minting NFT: {str(e)}"
     finally:
-        os.unlink(path)
+        os.unlink(tmp_path)
 
 
 def main():
@@ -110,25 +111,22 @@ def main():
         
         col1, col2 = st.columns(2)
         
-        tmp_path = None
-        gen_img_path = None
+        uploaded_image = None
+        generated_image = None
         
         with col1:
             st.subheader("Upload Image")
             uploaded_file = st.file_uploader("Choose an image", type=['png', 'jpg', 'jpeg', 'webp'])
+            print(type(uploaded_file))
             if uploaded_file:
                 valid, msg = check_image(uploaded_file)
                 if valid:
                     st.image(uploaded_file)
-                    uploaded_file = uploaded_file
-                    with tempfile.NamedTemporaryFile(delete=False, suffix='.webp') as tmp_file:
-                        tmp_file.write(uploaded_file.getvalue())
-                        tmp_path = tmp_file.name
-                        print("Temp file:", tmp_path)
-                        
+                    uploaded_image = uploaded_file
                 else:
                     st.error(msg)
-
+                
+            print("Uploaded image:", uploaded_image)
         
         with col2:
             st.subheader("Generate Image")
@@ -141,25 +139,30 @@ def main():
 
                 from generative import generate_image
                 with st.spinner('Generating image...'):
-                    st.session_state.gen_img_path = generate_image(prompt)
-                    if st.session_state.gen_img_path:
-                        st.image(st.session_state.gen_img_path)
+                    gen_img_path = generate_image(prompt)
+                    if gen_img_path:
+                        st.image(gen_img_path)
+                        with open(gen_img_path, 'rb') as f:
+                            generated_image = f.read()
                     else:
                         st.error("Sorry. Free quota exceeded. Please upload an image.")
+            
+            print("Generated image:", generated_image)
+
 
 
         if st.button("Mint NFT"):
-            print("Bool uploaded", bool(tmp_path))
-            print("Bool generated", bool(st.session_state.gen_img_path))
+            print("Bool uploaded", bool(uploaded_image))
+            print("Bool generated", bool(generated_image))
             if not title or not artist:
                 st.error("Please fill in title and artist")
-            elif not (bool(tmp_path) != bool(st.session_state.gen_img_path)):
+            elif not (bool(uploaded_image) != bool(generated_image)):
                 st.error("Please upload or generate an image")
             else:
                 with st.spinner('Minting NFT...'):
-                    path = tmp_path if tmp_path else st.session_state.gen_img_path
+                    image_to_use = uploaded_image if uploaded_image else generated_image
 
-                    success, msg = mint_nft(path, title, artist)
+                    success, msg = mint_nft(image_to_use, title, artist)
                     if success:
                         st.success(msg)
                     else:

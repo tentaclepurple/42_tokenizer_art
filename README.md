@@ -3,3 +3,4 @@ TOKEN_URI=ipfs://bafybeiecl7myvuveviqzi3lrpy2r3i5ijkdhkunimyc6gyzrrcck7c375m npx
 
 
 https://huggingface.co/spaces/KingNish/Realtime-FLUX
+https://huggingface.co/spaces/stabilityai/stable-diffusion-3.5-large
