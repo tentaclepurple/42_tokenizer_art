@@ -13,7 +13,6 @@ compile:
 deploy:
 	npx hardhat run deployment/deploy.js --network amoy
 
-
 mint:
 	npx hardhat run mint/mint.js --network amoy
 
@@ -22,6 +21,9 @@ verify:
 
 id:
 	npx hardhat run deployment/getTokenId.js --network amoy
+
+geturis:
+	npx hardhat run deployment/getTokenURIs.js --network amoy
 
 clean: down
 	docker system prune -a -f
